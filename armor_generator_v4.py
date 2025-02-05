@@ -1,11 +1,15 @@
 import streamlit as st
-import openai
+import openai import openai  # Import OpenAI
+
+# 🔹 Add API Key Here
+openai.api_key = "YOUR_OPENAI_API_KEY"  # Replace with you
+
 import requests
 from PIL import Image
 from io import BytesIO
 
 # App Title
-st.title("Custom Armor Generator - AI Integration")
+st.title("Custom Armour Generator - AI Integration")
 st.subheader("Customize your armor and generate AI visuals in real-time.")
 
 # Sidebar: Armor Customization
