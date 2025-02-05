@@ -6,7 +6,7 @@ from PIL import Image
 from io import BytesIO
 
 # Retrieve API Key from Streamlit Secrets
-openai.api_key = os.getenv("OPENAI_API_KEY")  # Uses Streamlit Secrets
+openai.api_key = "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"
 
 # Debugging: Check if API Key is loaded
 if openai.api_key:
