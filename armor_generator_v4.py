@@ -1,4 +1,3 @@
-
 import streamlit as st
 import os
 import openai
@@ -6,12 +5,12 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-# Set OpenAI API Key
-openai.api_key = os.getenv("OPENAI_API_KEY")  # Uses Streamlit Secrets if set
+# Retrieve API Key from Streamlit Secrets
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Uses Streamlit Secrets
 
-# 🔹 Debugging: Check if API Key is loaded
+# Debugging: Check if API Key is loaded
 if openai.api_key:
-    st.write(f"✅ API Key Set: {openai.api_key[:5]}*****")  # Show only first 5 characters for security
+    st.write(f"✅ API Key Set: {openai.api_key[:5]}*****")  # Show only first 5 characters
 else:
     st.error("❌ OpenAI API Key not found! Please set it in Streamlit Secrets.")
 
