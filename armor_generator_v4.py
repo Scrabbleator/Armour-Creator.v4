@@ -1,15 +1,22 @@
+
 import streamlit as st
-import openai import openai  # Import OpenAI
-
-# 🔹 Add API Key Here
-openai.api_key = "YOUR_OPENAI_API_KEY"  # Replace with you
-
+import os
+import openai
 import requests
 from PIL import Image
 from io import BytesIO
 
+# Set OpenAI API Key
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Uses Streamlit Secrets if set
+
+# 🔹 Debugging: Check if API Key is loaded
+if openai.api_key:
+    st.write(f"✅ API Key Set: {openai.api_key[:5]}*****")  # Show only first 5 characters for security
+else:
+    st.error("❌ OpenAI API Key not found! Please set it in Streamlit Secrets.")
+
 # App Title
-st.title("Custom Armour Generator - AI Integration")
+st.title("Custom Armor Generator - AI Integration")
 st.subheader("Customize your armor and generate AI visuals in real-time.")
 
 # Sidebar: Armor Customization
@@ -85,6 +92,10 @@ st.text_area("AI Prompt", value=prompt, height=150)
 
 # AI Image Generation Function
 def generate_armor_image(prompt):
+    if not openai.api_key:
+        st.error("❌ OpenAI API Key is missing. Please set it in Streamlit Secrets.")
+        return None
+
     response = openai.Image.create(
         prompt=prompt,
         n=1,
@@ -100,20 +111,21 @@ if st.button("Generate Armor Image"):
     with st.spinner("Generating image..."):
         try:
             image_url = generate_armor_image(prompt)
-            response = requests.get(image_url)
-            image = Image.open(BytesIO(response.content))
-            st.image(image, caption="AI-Generated Armor")
+            if image_url:
+                response = requests.get(image_url)
+                image = Image.open(BytesIO(response.content))
+                st.image(image, caption="AI-Generated Armor")
 
-            # Allow users to download the image
-            buf = BytesIO()
-            image.save(buf, format="PNG")
-            byte_im = buf.getvalue()
+                # Allow users to download the image
+                buf = BytesIO()
+                image.save(buf, format="PNG")
+                byte_im = buf.getvalue()
 
-            st.download_button(
-                label="Download Armor Image",
-                data=byte_im,
-                file_name="custom_armor.png",
-                mime="image/png"
-            )
+                st.download_button(
+                    label="Download Armor Image",
+                    data=byte_im,
+                    file_name="custom_armor.png",
+                    mime="image/png"
+                )
         except Exception as e:
             st.error(f"Error generating image: {e}")
